@@ -1,0 +1,12 @@
+syntax = "proto2";
+package org.stormchaser.server;
+
+message Measurements{
+	//UTC-Time when the measurement was started
+	required int64	measurementStarttimeUTC = 1;
+	//the millisecond intervall were ticks from the windsensor are counted
+	required uint32 measurementIntervallMs = 2;
+
+	//the number of ticks per measurement intervall
+	repeated uint32 ticks = 3;
+}

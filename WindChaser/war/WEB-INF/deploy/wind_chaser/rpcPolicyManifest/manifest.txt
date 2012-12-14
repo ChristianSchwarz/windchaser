@@ -1,0 +1,2 @@
+# Module wind_chaser
+# RPC service class, partial path of RPC policy file
