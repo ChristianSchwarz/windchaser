@@ -3,13 +3,8 @@ package org.windchaser;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.experimental.theories.suppliers.TestedOn;
-import org.mockito.Matchers;
 
 /**
  * Tests the class {@link MeasurementValues}
@@ -76,14 +71,14 @@ public class TestMeasurementValues {
 	 */
 	@Test
 	public void getMeasurementDurationMs() {
-		assertThat(measurementValues.getMeasurementDurationMs(),is(DURATION));
+		assertThat(measurementValues.getMeasurementDurationMs(), is(DURATION));
 	}
-	
+
 	/**
 	 * Checks if the tick count passed to the constructor is returned.
 	 */
 	@Test
 	public void getTicks() {
-		assertThat(measurementValues.getTickCount(),is(TICKS));
+		assertThat(measurementValues.getTickCount(), is(TICKS));
 	}
 }

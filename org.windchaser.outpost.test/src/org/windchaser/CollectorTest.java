@@ -2,9 +2,10 @@ package org.windchaser;
 
 import static com.pi4j.io.gpio.PinState.HIGH;
 import static com.pi4j.io.gpio.PinState.LOW;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.isNotNull;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import org.junit.Before;
@@ -13,8 +14,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
 import com.google.common.eventbus.Subscribe;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
