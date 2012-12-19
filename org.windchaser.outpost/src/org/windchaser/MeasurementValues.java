@@ -5,8 +5,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 /**
  * A {@link MeasurementValues} contains a number of recorded ticks (state
  * changes) permeasurement duration. For every half turn of the anemometer, one
- * tick is generated. From the number of ticks per unit of time, the wind speed
- * can be derived.
+ * tick is generated. By the number of ticks per unit of time, the wind speed
+ * can derived.
  * 
  * @author Christian Schwarz
  * 
@@ -39,13 +39,13 @@ public class MeasurementValues  {
 	
 
 	/**
-	 * Returns the number of ticks per  measurement. One tick represents a
-	 * half turn of the anemometer. From the number of ticks per time unit,
-	 * the wind speed can be derived.
+	 * Returns the number of ticks detected during the measurement. One tick represents a
+	 * half turn of the anemometer. By the number of ticks per time unit,
+	 * the wind speed can derived.
 	 * 
 	 * @return number of ticks >=0
 	 */
-	public int getTicksPerInterval() {
+	public int getTickCount() {
 		return ticksPerInterval;
 	}
 

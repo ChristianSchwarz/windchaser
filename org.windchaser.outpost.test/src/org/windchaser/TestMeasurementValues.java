@@ -1,9 +1,15 @@
 package org.windchaser;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matcher;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.theories.suppliers.TestedOn;
+import org.mockito.Matchers;
 
 /**
  * Tests the class {@link MeasurementValues}
@@ -13,11 +19,13 @@ import org.junit.Test;
  */
 public class TestMeasurementValues {
 
+	private static final int DURATION = 1000;
+	private static final int TICKS = 12;
 	private MeasurementValues measurementValues;
 
 	@Before
 	public void setUp() throws Exception {
-
+		measurementValues = new MeasurementValues(TICKS, DURATION);
 	}
 
 	/**
@@ -60,6 +68,22 @@ public class TestMeasurementValues {
 	 */
 	@Test
 	public void new_withSmallestTickNumber() throws Exception {
-		new MeasurementValues(50,1);
+		new MeasurementValues(50, 1);
+	}
+
+	/**
+	 * Checks if the duration passed to the constructor is returned.
+	 */
+	@Test
+	public void getMeasurementDurationMs() {
+		assertThat(measurementValues.getMeasurementDurationMs(),is(DURATION));
+	}
+	
+	/**
+	 * Checks if the tick count passed to the constructor is returned.
+	 */
+	@Test
+	public void getTicks() {
+		assertThat(measurementValues.getTickCount(),is(TICKS));
 	}
 }
