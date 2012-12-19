@@ -1,13 +1,16 @@
 package org.windchaser;
 
 import static com.pi4j.io.gpio.PinState.HIGH;
-import static com.pi4j.io.gpio.PinState.LOW;
-import static org.mockito.Matchers.isNotNull;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.concurrent.ScheduledExecutorService;
+
+import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -29,12 +32,17 @@ public class CollectorTest {
 	@Mock
 	private CollectorListener collectorListener;
 
+	@Mock
+	private ScheduledExecutorService executor;
+
 	@InjectMocks
 	private Collector collector;
 
 	@Captor
 	private ArgumentCaptor<GpioPinListenerDigital> dipListener;
 
+	@Captor
+	private ArgumentCaptor<Runnable> dispatchTask;
 	@Before
 	public void setUp() throws Exception {
 		initMocks(this);
@@ -42,61 +50,85 @@ public class CollectorTest {
 	}
 
 	/**
-	 * Checks if a {@link NullPointerException} is thrown when <code>null</code>
+	 * Verifies that a {@link NullPointerException} is thrown when <code>null</code>
 	 * is passed.
 	 * 
 	 * @throws Exception
 	 */
 	@Test(expected = NullPointerException.class)
 	public void new_nullPin() throws Exception {
-		new Collector(null);
+		new Collector(null, executor);
 	}
 
 	/**
-	 * Checks that nothing happens when no listener is registered and an state
-	 * change on the digital input is triggered.
+	 * Verifies that {@link NullPointerException} is thrown when <code>null</code>
+	 * is passed.
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = NullPointerException.class)
+	public void new_nullExecutor() throws Exception {
+		new Collector(digitalInput, null);
+	}
+
+	/**
+	 * Verifies that a {@link IllegalArgumentException} is thrown when a negative 
+	 * interval is set.
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void setMeasurementIntervall_negative() throws Exception {
+		collector.setCollectorInterval(-1);
+	}
+
+	/**
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void noNotificationWhenNoListenerIsRegistered() throws Exception {
+	public void dispatch_noListenerRegistered() throws Exception {
+		verify(executor).scheduleAtFixedRate(dispatchTask.capture(), eq(10000L),eq(10000L), eq(MILLISECONDS));
+		
 		fireGpioPinDigitalStateChanged(HIGH);
-		verifyNoMoreInteractions(digitalInput);
+		
+		dispatchTask.getValue().run();
+		
+		verify(collectorListener,never()).onStateChanged(any(MeasurementValues.class));
+		
 	}
-
+	
 	/**
-	 * Checks if a Event is fired when the digital input change to high.
+	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public void notificationWhenStateChange_toHigh() throws Exception {
+	public void dispatch_toListenerRegistered() throws Exception {
+		verify(executor).scheduleAtFixedRate(dispatchTask.capture(), eq(10000L),eq(10000L), eq(MILLISECONDS));
+		
 		collector.addListener(collectorListener);
 		fireGpioPinDigitalStateChanged(HIGH);
-		verify(collectorListener).onStateChanged(isNotNull(MeasurementValues.class));
+		
+		dispatchTask.getValue().run();
+		
+		verify(collectorListener).onStateChanged(any(MeasurementValues.class));
+		
 	}
 
-	
-	/**
-	 *  Checks if a Event is fired when the digital input change to low.
-	 * @throws Exception
-	 */
-	@Test
-	public void noNotificationWhenStateChange_toLow() throws Exception {
-		collector.addListener(collectorListener);
-		fireGpioPinDigitalStateChanged(LOW);
-		verify(collectorListener, never()).onStateChanged(isNotNull(MeasurementValues.class));
-	}
-	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static class CollectorListener {
 		@Subscribe
 		public void onStateChanged(MeasurementValues evt) {
 		};
 	}
-	
+
 	private void fireGpioPinDigitalStateChanged(PinState state) {
 		GpioPinDigitalStateChangeEvent evt = new GpioPinDigitalStateChangeEvent(new Object(), digitalInput, state);
 		GpioPinListenerDigital pinListener = dipListener.getValue();
 		pinListener.handleGpioPinDigitalStateChangeEvent(evt);
 	}
+	
+//	private Matcher<MeasurementValues> countedTicks(int ticks){
+//		return new CustomMatcher<MeasurementValues>(){};
+//	}
 }
