@@ -73,7 +73,7 @@ public class CollectorTest {
 	public void notificationWhenStateChange_toHigh() throws Exception {
 		collector.addListener(collectorListener);
 		fireGpioPinDigitalStateChanged(HIGH);
-		verify(collectorListener).onStateChanged(isNotNull(MeasurementEvent.class));
+		verify(collectorListener).onStateChanged(isNotNull(MeasurementValues.class));
 	}
 
 	
@@ -85,13 +85,13 @@ public class CollectorTest {
 	public void noNotificationWhenStateChange_toLow() throws Exception {
 		collector.addListener(collectorListener);
 		fireGpioPinDigitalStateChanged(LOW);
-		verify(collectorListener, never()).onStateChanged(isNotNull(MeasurementEvent.class));
+		verify(collectorListener, never()).onStateChanged(isNotNull(MeasurementValues.class));
 	}
 	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static class CollectorListener {
 		@Subscribe
-		public void onStateChanged(MeasurementEvent evt) {
+		public void onStateChanged(MeasurementValues evt) {
 		};
 	}
 	

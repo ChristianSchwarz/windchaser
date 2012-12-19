@@ -40,14 +40,14 @@ public class Collector {
 	 * Will be invoked when the state changed from LOW to HIGH
 	 */
 	private void postStateChanged() {
-		eventBus.post(new MeasurementEvent(this, 0, 0));
+		eventBus.post(new MeasurementValues(0, 0));
 	}
 
 	/**
 	 * Registers the given listener, to receive event notifications when a
 	 * change from LOW to HIGH is detected on the digital input. The
 	 * <code>listener</code>-Object must have a method with one argument of the
-	 * type {@link MeasurementEvent} and the annotation {@code @Subscribe},
+	 * type {@link MeasurementValues} and the annotation {@code @Subscribe},
 	 * e.g.:
 	 * 
 	 * <pre>
