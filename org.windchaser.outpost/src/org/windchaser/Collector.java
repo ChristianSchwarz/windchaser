@@ -3,10 +3,11 @@ package org.windchaser;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.pi4j.io.gpio.PinState.HIGH;
+import static java.lang.System.currentTimeMillis;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
@@ -21,7 +22,7 @@ import com.pi4j.io.gpio.event.GpioPinListenerDigital;
  * 
  */
 public class Collector {
-	private static final int SECONDS_10 = 10000;
+	private static final int SECONDS_2 = 2000;
 
 	/**
 	 * Dispatches {@link MeasurementValues} to registered listeners
@@ -34,20 +35,32 @@ public class Collector {
 	 * Handles changes to state {@link PinState#HIGH}
 	 */
 	private final GpioPinListenerDigital gpioPinListenerDigital = new GpioPinListenerDigital() {
-
+		long t=currentTimeMillis();
 		@Override
 		public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evt) {
-			if (evt.getState() == HIGH)
-				postStateChanged();
+			
+			if (evt.getState() == HIGH){
+				long currentTime = currentTimeMillis();
+				System.out.println(currentTime-t);
+				
+				t= currentTime;
+				ticks.incrementAndGet();
+				
+			}
 		}
 	};
 
 	private ScheduledExecutorService executor;
 	/**
 	 * The interval where ticks are counted, in milliseconds<br>
-	 * Default: 10seconds
+	 * Default: 2seconds
 	 * */
-	private long measurmentIntervall=SECONDS_10;
+	private long measurmentIntervall=SECONDS_2;
+
+	/** Counts the ticks per measurement*/
+	private final AtomicInteger ticks = new AtomicInteger();
+	/** */
+	private long measurementStart;
 
 	/**
 	 * Creates a new collector that listens on the given GPIO-Pin.
@@ -68,6 +81,7 @@ public class Collector {
 	}
 
 	private void startCollecting() {
+		measurementStart = currentTimeMillis(); 
 		Runnable command = new Runnable() {
 			
 			@Override
@@ -80,16 +94,16 @@ public class Collector {
 	}
 
 	protected void postMeasurementValues() {
-		eventBus.post(new MeasurementValues(0, 0));
+		long currentTimeMillis = currentTimeMillis();
+		long durationMillis = currentTimeMillis-measurementStart;
+		int count = ticks.getAndSet(0);
+
+		System.out.println(durationMillis+"ms ->"+count);
+		
+		measurementStart = currentTimeMillis; 
 	}
 
-	/**
-	 * Will be invoked when the state changed from LOW to HIGH
-	 */
-	private void postStateChanged() {
-
-		// 
-	}
+	
 
 	/**
 	 * Registers the given listener, to receive event notifications when a
