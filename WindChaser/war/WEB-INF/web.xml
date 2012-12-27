@@ -13,7 +13,7 @@
 	
 	<servlet>
 		<servlet-name>outpostServlet</servlet-name>
-		<servlet-class>org.stormchaser.server.GreetingServiceImpl</servlet-class>
+		<servlet-class>org.stormchaser.server.OutpostServlet</servlet-class>
 	</servlet>
 	
 	<servlet-mapping>

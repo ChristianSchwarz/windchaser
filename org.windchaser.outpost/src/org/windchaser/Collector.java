@@ -2,12 +2,15 @@ package org.windchaser;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.primitives.Ints.toArray;
 import static com.pi4j.io.gpio.PinState.HIGH;
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.nanoTime;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
@@ -35,18 +38,21 @@ public class Collector {
 	 * Handles changes to state {@link PinState#HIGH}
 	 */
 	private final GpioPinListenerDigital gpioPinListenerDigital = new GpioPinListenerDigital() {
-		long t=currentTimeMillis();
+		private long t ;
+		private boolean logDiff=false;
 		@Override
 		public void handleGpioPinDigitalStateChangeEvent(GpioPinDigitalStateChangeEvent evt) {
+			if (evt.getState()==HIGH)
+				logDiff=true;
 			
-			if (evt.getState() == HIGH){
-				long currentTime = currentTimeMillis();
-				System.out.println(currentTime-t);
-				
-				t= currentTime;
-				ticks.incrementAndGet();
-				
-			}
+			long currentTime = nanoTime()/10000;
+			int delta = (int)(currentTime - t);
+			System.out.println(evt.getState() + " " + delta);
+
+			t = currentTime;
+			
+			if(logDiff)
+				changes.add(delta);
 		}
 	};
 
@@ -55,11 +61,12 @@ public class Collector {
 	 * The interval where ticks are counted, in milliseconds<br>
 	 * Default: 2seconds
 	 * */
-	private long measurmentIntervall=SECONDS_2;
+	private long measurmentIntervall = SECONDS_2;
 
-	/** Counts the ticks per measurement*/
-	private final AtomicInteger ticks = new AtomicInteger();
+
 	/** */
+	private List<Integer> changes = new ArrayList<>(400);
+
 	private long measurementStart;
 
 	/**
@@ -73,7 +80,7 @@ public class Collector {
 	public Collector(GpioPinDigitalInput digitalInput, ScheduledExecutorService executor) {
 		checkNotNull(digitalInput, "Parameter >digitalInput< must be null!");
 		checkNotNull(executor, "Parameter >executor< must be null!");
-		eventBus = new AsyncEventBus("Collector:"+digitalInput.getName(), executor);
+		eventBus = new AsyncEventBus("Collector:" + digitalInput.getName(), executor);
 		this.executor = executor;
 
 		digitalInput.addListener(gpioPinListenerDigital);
@@ -81,9 +88,9 @@ public class Collector {
 	}
 
 	private void startCollecting() {
-		measurementStart = currentTimeMillis(); 
+		measurementStart = currentTimeMillis();
 		Runnable command = new Runnable() {
-			
+
 			@Override
 			public void run() {
 				postMeasurementValues();
@@ -94,16 +101,20 @@ public class Collector {
 	}
 
 	protected void postMeasurementValues() {
-		long currentTimeMillis = currentTimeMillis();
-		long durationMillis = currentTimeMillis-measurementStart;
-		int count = ticks.getAndSet(0);
-
-		System.out.println(durationMillis+"ms ->"+count);
+		final List<Integer> changes= this.changes;
+		this.changes = new ArrayList<>(500);
 		
-		measurementStart = currentTimeMillis; 
-	}
+		
+		long currentTimeMillis = currentTimeMillis();
+		long durationMillis = currentTimeMillis - measurementStart;
+		
 
-	
+		System.out.println(durationMillis + "ms ->" + changes.size());
+
+		eventBus.post(new MeasurementValues(measurementStart, toArray(changes)));
+		measurementStart = currentTimeMillis;
+		
+	}
 
 	/**
 	 * Registers the given listener, to receive event notifications when a
@@ -114,7 +125,7 @@ public class Collector {
 	 * 
 	 * <pre>
 	 * {@code @Subscribe}
-	 * public void stateChanged(PinStateChangedEvent evt){
+	 * public void stateChanged(MeasurementValues values){
 	 *   ...
 	 * }
 	 * </pre>

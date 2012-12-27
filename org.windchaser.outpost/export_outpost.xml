@@ -12,6 +12,13 @@
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/pi4j-core-0.0.4-SNAPSHOT.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/protobuf-java-2.4.1.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/guava-13.0.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/commons-codec-1.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/commons-logging-1.1.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/fluent-hc-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/httpclient-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/httpclient-cache-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/httpcore-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Chris/workspace/windchaser-git/org.windchaser.outpost/libs/httpmime-4.2.2.jar"/>
         </jar>
     </target>
 </project>

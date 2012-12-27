@@ -5,5 +5,12 @@
 	<classpathentry kind="lib" path="libs/pi4j-core-0.0.4-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="libs/protobuf-java-2.4.1.jar"/>
 	<classpathentry kind="lib" path="libs/guava-13.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/commons-codec-1.6.jar"/>
+	<classpathentry kind="lib" path="libs/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/fluent-hc-4.2.2.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-4.2.2.jar"/>
+	<classpathentry kind="lib" path="libs/httpclient-cache-4.2.2.jar"/>
+	<classpathentry kind="lib" path="libs/httpcore-4.2.2.jar"/>
+	<classpathentry kind="lib" path="libs/httpmime-4.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
