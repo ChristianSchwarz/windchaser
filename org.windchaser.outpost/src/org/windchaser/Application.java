@@ -5,13 +5,8 @@ import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.zip.Deflater;
-import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;

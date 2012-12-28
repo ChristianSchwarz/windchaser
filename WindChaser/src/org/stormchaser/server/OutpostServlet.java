@@ -1,7 +1,6 @@
 package org.stormchaser.server;
 
 import static org.mortbay.jetty.HttpStatus.ORDINAL_400_Bad_Request;
-import static org.mortbay.jetty.HttpStatus.ORDINAL_412_Precondition_Failed;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -15,6 +14,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.appengine.labs.repackaged.com.google.common.primitives.Ints;
+
 /**
  * Beantwortet Anfragen der Wetterstation
  * @author Christian Schwarz
@@ -25,14 +26,10 @@ public class OutpostServlet extends HttpServlet {
 	
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException{
-//		if (!isContentTypeOctetStream(req)){
-//			resp.sendError(ORDINAL_412_Precondition_Failed, "Unsupported content type!"+ req.getContentType());
-//			return;
-//		}
-		
-		
 		try {
-			decodeContent(req.getInputStream());
+			int[] content = decodeContent(req.getInputStream());
+			
+			getServletContext().setAttribute("diff", content);
 		} catch (IOException e) {
 			System.err.println(e);
 			resp.sendError(ORDINAL_400_Bad_Request, e.getMessage());
@@ -42,7 +39,7 @@ public class OutpostServlet extends HttpServlet {
 	}
 
 	
-	private void decodeContent(ServletInputStream inputStream) throws IOException  {
+	private int[] decodeContent(ServletInputStream inputStream) throws IOException  {
 		GZIPInputStream gzip= new GZIPInputStream(inputStream);
 		DataInputStream dis = new DataInputStream(gzip);
 		List<Integer> diffs = new ArrayList<Integer>();
@@ -55,11 +52,9 @@ public class OutpostServlet extends HttpServlet {
 		}
 		
 		System.out.println(diffs);
-		
+		return Ints.toArray(diffs);
 	}
 
 
-	private boolean isContentTypeOctetStream(HttpServletRequest req) {
-		return "application/octet-stream".equalsIgnoreCase(req.getContentType());
-	}
+	
 }

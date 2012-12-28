@@ -1,6 +1,7 @@
 package org.stormchaser.client;
 
-import org.stormchaser.shared.FieldVerifier;
+import java.util.Arrays;
+
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -83,7 +84,7 @@ public class Wind_Chaser implements EntryPoint {
 		});
 
 		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler, KeyUpHandler {
+		class MyHandler implements ClickHandler {
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
@@ -91,32 +92,15 @@ public class Wind_Chaser implements EntryPoint {
 				sendNameToServer();
 			}
 
-			/**
-			 * Fired when the user types in the nameField.
-			 */
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-					sendNameToServer();
-				}
-			}
+			
 
 			/**
 			 * Send the name from the nameField to the server and wait for a response.
 			 */
 			private void sendNameToServer() {
-				// First, we validate the input.
-				errorLabel.setText("");
-				String textToServer = nameField.getText();
-				if (!FieldVerifier.isValidName(textToServer)) {
-					errorLabel.setText("Please enter at least four characters");
-					return;
-				}
-
-				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
+	
 				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer, new AsyncCallback<String>() {
+				greetingService.greetServer(new AsyncCallback<int[]>() {
 					public void onFailure(Throwable caught) {
 						// Show the RPC error message to the user
 						dialogBox.setText("Remote Procedure Call - Failure");
@@ -126,12 +110,16 @@ public class Wind_Chaser implements EntryPoint {
 						closeButton.setFocus(true);
 					}
 
-					public void onSuccess(String result) {
+				
+
+					@Override
+					public void onSuccess(int[] result) {
 						dialogBox.setText("Remote Procedure Call");
 						serverResponseLabel.removeStyleName("serverResponseLabelError");
-						serverResponseLabel.setHTML(result);
+						serverResponseLabel.setHTML(Arrays.toString(result));
 						dialogBox.center();
 						closeButton.setFocus(true);
+						
 					}
 				});
 			}
@@ -140,6 +128,6 @@ public class Wind_Chaser implements EntryPoint {
 		// Add a handler to send the name to the server
 		MyHandler handler = new MyHandler();
 		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+		
 	}
 }

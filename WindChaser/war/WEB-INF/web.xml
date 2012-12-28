@@ -8,7 +8,7 @@
 	
 	<servlet-mapping>
 		<servlet-name>greetServlet</servlet-name>
-		<url-pattern>/windchaser/greet</url-pattern>
+		<url-pattern>/wind_chaser/greet</url-pattern>
 	</servlet-mapping>
 	
 	<servlet>

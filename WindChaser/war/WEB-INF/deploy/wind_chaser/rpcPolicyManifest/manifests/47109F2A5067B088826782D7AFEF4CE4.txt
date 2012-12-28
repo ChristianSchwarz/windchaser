@@ -1,0 +1,2 @@
+serviceClass: org.stormchaser.client.GreetingService
+path: B8E042BB288337D3F1E31D25AB792C94.gwt.rpc
