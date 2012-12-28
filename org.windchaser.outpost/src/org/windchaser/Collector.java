@@ -47,6 +47,10 @@ public class Collector {
 			
 			long currentTime = nanoTime()/10000;
 			int delta = (int)(currentTime - t);
+			
+			if (t==0)
+				delta=0;
+			
 			System.out.println(evt.getState() + " " + delta);
 
 			t = currentTime;

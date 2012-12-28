@@ -11,7 +11,9 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class GreetingServiceImpl extends RemoteServiceServlet implements GreetingService {
 
 	public int[] greetServer() throws IllegalArgumentException {
-			return (int[]) getServletContext().getAttribute("diff");
+			int[] diff = (int[]) getServletContext().getAttribute("diff");
+			getServletContext().setAttribute("diff", null);
+			return diff;
 	}
 
 	
