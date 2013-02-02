@@ -1,5 +1,8 @@
 package org.windchaser;
 
+import static com.pi4j.io.gpio.PinPullResistance.PULL_DOWN;
+import static com.pi4j.io.gpio.RaspiPin.GPIO_00;
+import static java.lang.Thread.MAX_PRIORITY;
 import static java.util.concurrent.Executors.newSingleThreadScheduledExecutor;
 
 import java.io.ByteArrayOutputStream;
@@ -20,8 +23,6 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;
 import com.pi4j.io.gpio.GpioPinDigitalInput;
-import com.pi4j.io.gpio.PinPullResistance;
-import com.pi4j.io.gpio.RaspiPin;
 
 public class Application {
 
@@ -54,7 +55,7 @@ public class Application {
 				EntityUtils.consume(entity);
 			} catch (IOException e) {
 
-				e.printStackTrace();
+				System.err.println(httpPost+"\r\n"+e.getMessage());
 			} finally {
 				httpPost.releaseConnection();
 			}
@@ -78,15 +79,16 @@ public class Application {
 	};
 
 	public void start(String[] args) {
-
-		ScheduledExecutorService executor = newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setPriority(Thread.MAX_PRIORITY).build());
+		new Modem().connect();
+		
+		ScheduledExecutorService executor = newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setPriority(MAX_PRIORITY).build());
 
 		// create gpio controller
 		final GpioController gpio = GpioFactory.getInstance();
 
 		// provision gpio pin #02 as an input pin with its internal pull down
 		// resistor enabled
-		final GpioPinDigitalInput digitalInput = gpio.provisionDigitalInputPin(RaspiPin.GPIO_00, PinPullResistance.PULL_DOWN);
+		final GpioPinDigitalInput digitalInput = gpio.provisionDigitalInputPin(GPIO_00, PULL_DOWN);
 
 		Collector collector = new Collector(digitalInput, executor);
 		collector.addListener(listener);
