@@ -115,9 +115,7 @@ public class Collector {
 
 		System.out.println(durationMillis + "ms ->" + changes.size());
 
-		eventBus.post(new MeasurementValues(measurementStart, toArray(changes)));
-		measurementStart = currentTimeMillis;
-		
+		eventBus.post(new MeasurementValues( toArray(changes)));
 	}
 
 	/**

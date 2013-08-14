@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project org.windchaser.outpost">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/Alle/Chris/RaspPi/outpost.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="org.windchaser.Main"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <zipfileset excludes="META-INF/*.SF" src="E:/eclipse/plugins/com.google.guava_10.0.1.v201203051515.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/eclipse/plugins/org.eclipse.xtext.xbase.lib_2.4.2.v201306040922.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="E:/eclipse/plugins/org.eclipse.xtend.lib_2.4.2.v201306040922.jar"/>
+            <fileset dir="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/pi4j-core-0.0.4-SNAPSHOT.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/protobuf-java-2.4.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/guava-13.0.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/commons-codec-1.6.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/commons-logging-1.1.1.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/fluent-hc-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/httpclient-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/httpclient-cache-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/httpcore-4.2.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="C:/Users/Alle/Chris/RaspPi/workspace-git/org.windchaser.outpost/libs/httpmime-4.2.2.jar"/>
+        </jar>
+    </target>
+</project>

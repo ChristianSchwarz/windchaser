@@ -35,7 +35,7 @@ public class Application {
 
 			DefaultHttpClient httpclient = new DefaultHttpClient();
 
-			HttpPost httpPost = new HttpPost("http://192.168.0.199:8888/windchaser/outpost");
+			HttpPost httpPost = new HttpPost("http://192.168.1.68:8888/windchaser/outpost");
 
 			try {
 
@@ -79,7 +79,7 @@ public class Application {
 	};
 
 	public void start(String[] args) {
-		new Modem().connect();
+		new Sakis3gModem2().connect();
 		
 		ScheduledExecutorService executor = newSingleThreadScheduledExecutor(new ThreadFactoryBuilder().setPriority(MAX_PRIORITY).build());
 
