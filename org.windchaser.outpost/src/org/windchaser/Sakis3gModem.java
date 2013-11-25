@@ -12,15 +12,22 @@ import java.io.InputStreamReader;
 import java.io.InterruptedIOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 
 public class Sakis3gModem implements Modem {
 
 	@Override
 	public void connect() throws IOException {
 
-		connectUsbModem("19d2:0016");
-		isConnected();
+		connectUsbModem("19d2:0016",9077);
+		if (!isConnected())
+			throw new IOException("Connect failed!");
 
+		printP2P();
+
+	}
+
+	private void printP2P() throws SocketException {
 		for (NetworkInterface ni : list(getNetworkInterfaces())) {
 			if (!ni.isPointToPoint())
 				continue;
@@ -31,7 +38,6 @@ public class Sakis3gModem implements Modem {
 				System.out.println(addr.getHostAddress());
 			}
 		}
-
 	}
 
 	private boolean isConnected() throws IOException {
@@ -53,9 +59,9 @@ public class Sakis3gModem implements Modem {
 		}
 	}
 
-	private void connectUsbModem(String modem) throws IOException {
+	private void connectUsbModem(String modem, int pin) throws IOException {
 		Process process = getRuntime().exec(
-				"sudo ./sakis3g connect ---console --pppd APN=internet USBDRIVER=option MODEM="
+				"sudo ./sakis3g connect ---console --pppd APN=internet PIN="+pin+" USBDRIVER=option MODEM="
 						+ modem);
 
 		InputStream is = process.getInputStream();
