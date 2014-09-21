@@ -39,22 +39,22 @@ public class Sakis3gModem2 implements Modem {
       }
       Enumeration<NetworkInterface> _networkInterfaces = NetworkInterface.getNetworkInterfaces();
       final Predicate<NetworkInterface> _function = new Predicate<NetworkInterface>() {
-          public boolean apply(final NetworkInterface it) {
-            try {
-              boolean _and = false;
-              boolean _isUp = it.isUp();
-              if (!_isUp) {
-                _and = false;
-              } else {
-                boolean _isPointToPoint = it.isPointToPoint();
-                _and = (_isUp && _isPointToPoint);
-              }
-              return _and;
-            } catch (Throwable _e) {
-              throw Exceptions.sneakyThrow(_e);
+        public boolean apply(final NetworkInterface it) {
+          try {
+            boolean _and = false;
+            boolean _isUp = it.isUp();
+            if (!_isUp) {
+              _and = false;
+            } else {
+              boolean _isPointToPoint = it.isPointToPoint();
+              _and = _isPointToPoint;
             }
+            return _and;
+          } catch (Throwable _e) {
+            throw Exceptions.sneakyThrow(_e);
           }
-        };
+        }
+      };
       Sakis3gModem2.printAll(_networkInterfaces, _function);
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);
@@ -65,10 +65,10 @@ public class Sakis3gModem2 implements Modem {
     final UnmodifiableIterator<NetworkInterface> iterable = Iterators.<NetworkInterface>forEnumeration(networkInterfaces);
     UnmodifiableIterator<NetworkInterface> _filter = Iterators.<NetworkInterface>filter(iterable, filter);
     final Procedure1<NetworkInterface> _function = new Procedure1<NetworkInterface>() {
-        public void apply(final NetworkInterface it) {
-          Sakis3gModem2.println(it);
-        }
-      };
+      public void apply(final NetworkInterface it) {
+        Sakis3gModem2.println(it);
+      }
+    };
     IteratorExtensions.<NetworkInterface>forEach(_filter, _function);
   }
   
@@ -76,46 +76,44 @@ public class Sakis3gModem2 implements Modem {
     Thread _xblockexpression = null;
     {
       InputStreamReader _inputStreamReader = new InputStreamReader(is);
-      BufferedReader _bufferedReader = new BufferedReader(_inputStreamReader);
-      final BufferedReader it = _bufferedReader;
+      final BufferedReader it = new BufferedReader(_inputStreamReader);
       Runnable _printLinesOf = Sakis3gModem2.printLinesOf(it);
       Thread _thread = new Thread(_printLinesOf);
       final Procedure1<Thread> _function = new Procedure1<Thread>() {
-          public void apply(final Thread it) {
-            String _plus = ("Printer of:" + is);
-            it.setName(_plus);
-            it.setDaemon(true);
-            it.start();
-          }
-        };
-      Thread _doubleArrow = ObjectExtensions.<Thread>operator_doubleArrow(_thread, _function);
-      _xblockexpression = (_doubleArrow);
+        public void apply(final Thread it) {
+          String _plus = ("Printer of:" + is);
+          it.setName(_plus);
+          it.setDaemon(true);
+          it.start();
+        }
+      };
+      _xblockexpression = ObjectExtensions.<Thread>operator_doubleArrow(_thread, _function);
     }
     return _xblockexpression;
   }
   
   private static Runnable printLinesOf(final BufferedReader it) {
     final Runnable _function = new Runnable() {
-        public void run() {
-          try {
-            boolean _while = true;
-            while (_while) {
-              String _readLine = it.readLine();
-              if (_readLine!=null) {
-                Sakis3gModem2.println(_readLine);
-              }
-              _while = true;
+      public void run() {
+        try {
+          boolean _while = true;
+          while (_while) {
+            String _readLine = it.readLine();
+            if (_readLine!=null) {
+              Sakis3gModem2.println(_readLine);
             }
-          } catch (final Throwable _t) {
-            if (_t instanceof IOException) {
-              final IOException e = (IOException)_t;
-              e.printStackTrace();
-            } else {
-              throw Exceptions.sneakyThrow(_t);
-            }
+            _while = true;
+          }
+        } catch (final Throwable _t) {
+          if (_t instanceof IOException) {
+            final IOException e = (IOException)_t;
+            e.printStackTrace();
+          } else {
+            throw Exceptions.sneakyThrow(_t);
           }
         }
-      };
+      }
+    };
     return _function;
   }
   
